@@ -9,6 +9,7 @@ user node['jboss-eap']['jboss_user'] do
 end
 
 # Grab and unpack jboss package
+unless File.file?("#{node['jboss-eap']['jboss_home']}/standalone/configuration/standalone.xml")
 ark node['jboss-eap']['symlink'] do
 	url node['jboss-eap']['package_url']
 	checksum node['jboss-eap']['checksum']
@@ -19,7 +20,12 @@ ark node['jboss-eap']['symlink'] do
 	group node['jboss-eap']['jboss_group']
 	action :install
 end
-
+else
+	log 'Jboss Already installed' do
+	  message "Jboss alread installed."
+	  level :info
+	end
+end
 
 # Init script config dir
 directory node['jboss-eap']['config_dir'] do
